@@ -72,6 +72,7 @@ Then register :mod:`zinnia`, and these following applications in the
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.contenttypes',
+    'django.contrib.staticfiles',
     'tagging',
     'mptt',
     'zinnia',
@@ -104,6 +105,7 @@ display the Weblog. ::
 
   url(r'^weblog/', include('zinnia.urls')),
   url(r'^comments/', include('django.contrib.comments.urls')),
+  url(r'^admin/', include(admin.site.urls)), # if not already present
 
 Remember to enable the :mod:`~django.contrib.admin` site in the urls.py of
 your project if you haven't done it yet for having the edition capabilities.
