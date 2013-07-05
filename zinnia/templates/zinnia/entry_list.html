@@ -24,9 +24,9 @@
 
 {% block content-title %}
 {% if category %}
-<h1>{% blocktrans %}Category archives: {{ category }}{% endblocktrans %}</h1>
+<h1>{% blocktrans %}Category archives: {{ category }}{% endblocktrans %} </h1>
 {% if category.description %}
-<p>{{ category.description|striptags|safe }}</p>
+<p>{{ category.description|striptags|safe }} <a href="{% url 'zinnia_category_feed' path=category.tree_path %}">RSS</a></p>
 {% endif %}
 {% endif %}
 
