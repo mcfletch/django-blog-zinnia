@@ -29,8 +29,8 @@ urlpatterns = patterns(
     url(_(r'^trackback/'), include('zinnia.urls.trackback')),
     url(_(r'^comments/'), include('zinnia.urls.comments')),
     url(r'^', include('zinnia.urls.entries')),
-    url(r'^', include('zinnia.urls.archives')),
     url(r'^', include('zinnia.urls.shortlink')),
+    url(r'^', include('zinnia.urls.archives')),
     url(r'^', include('zinnia.urls.quick_entry')),
     url(r'^', include('zinnia.urls.capabilities')),
 )
