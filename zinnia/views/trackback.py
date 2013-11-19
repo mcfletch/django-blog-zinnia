@@ -53,6 +53,12 @@ class EntryTrackback(TemplateMimeTypeView):
         excerpt = request.POST.get('excerpt') or title
         blog_name = request.POST.get('blog_name') or title
         ip_address = request.META.get( 'REMOTE_ADDR', None )
+        
+        if len(url) > 199:
+            return self.render_to_response(
+                {'error': u'Spam Filtered'})
+        # what is this even used for?
+        blog_name = blog_name[:50]
 
         trackback, created = comments.get_model().objects.get_or_create(
             content_type=ContentType.objects.get_for_model(Entry),
