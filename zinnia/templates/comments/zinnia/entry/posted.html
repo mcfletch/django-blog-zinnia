@@ -1,9 +1,9 @@
 {% extends "zinnia/base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Thanks for your comment" %}{% endblock %}
+{% block title %}{% trans "Thanks for your comment" %}{% endblock title %}
 
-{% block body-class %}comment-posted{% endblock %}
+{% block body-class %}comment-posted{% endblock body-class %}
 
 {% block content %}
 <h2>{% trans "Thanks for your comment" %}</h2>
@@ -22,10 +22,10 @@
   </li>
   {% endif %}
   <li>
-    <a href="{% url 'zinnia_entry_archive_index' %}"
+    <a href="{% url 'zinnia:entry_archive_index' %}"
        title="{% trans "Return to entry list" %}">
       {% trans "Return to entry list" %}
     </a>
   </li>
 </ul>
-{% endblock %}
+{% endblock content %}

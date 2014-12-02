@@ -39,10 +39,6 @@ Using the ``./bin/test`` script is usefull when you develop because the tests
 are calibrated to run fast, but testing Zinnia within a Django project even
 if it's slow, can prevent some integration issues.
 
-If you want to make some speed optimizations or compare with your tests
-results, you can check the actual execution time of the
-`tests on Python 2.7`_  online.
-
 .. _coverage:
 
 Coverage
@@ -51,7 +47,7 @@ Coverage
 Despite my best efforts, some functionnalities are not yet tested, that's why
 I need your help !
 
-As I write these lines the **160** tests in Zinnia cover **96%** of the code
+As I write these lines the **249** tests in Zinnia cover **99%** of the code
 bundled in Zinnia. A real effort has been made to obtain this percentage,
 for ensuring the quality of the code.
 
@@ -64,5 +60,4 @@ I hope that you will write some tests and find some bugs. :)
 
 .. _`unittest`: http://docs.python.org/library/unittest.html
 .. _`nose`: http://somethingaboutorange.com/mrl/projects/nose/
-.. _`tests on Python 2.7`: https://jenkins.shiningpanda.com/django-blog-zinnia/job/Django-Blog-Zinnia/PLATFORM=debian6,PYTHON=StacklessPython-2.7/lastCompletedBuild/testReport/zinnia.tests/
-.. _`coverage percent on Python 2.7`: https://jenkins.shiningpanda.com/django-blog-zinnia/job/Django-Blog-Zinnia/PLATFORM=debian6,PYTHON=StacklessPython-2.7/lastCompletedBuild/cobertura/
+.. _`coverage percent on Python 2.7`: https://coveralls.io/r/Fantomas42/django-blog-zinnia

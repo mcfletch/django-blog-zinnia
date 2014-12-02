@@ -10,7 +10,6 @@
 #
 # All configuration values have a default; values that are commented out
 # serve to show the default.
-
 import os
 import sys
 import re
@@ -55,8 +54,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Django Blog Zinnia'
-copyright = u'%s, %s' % (date.today().year, zinnia.__author__)
+project = 'Django Blog Zinnia'
+copyright = '%s, %s' % (date.today().year, zinnia.__author__)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -110,6 +109,9 @@ pygments_style = 'sphinx'
 # a list of builtin themes.
 html_theme = 'default'
 
+# For using default theme on RTFD
+html_style = 'default.css'
+
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
@@ -153,12 +155,12 @@ html_theme_options = {
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = 'logo.png'
+html_logo = 'static/logo.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = 'favicon.ico'
+html_favicon = 'static/favicon.ico'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -221,8 +223,8 @@ htmlhelp_basename = 'django-blog-zinniadoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'django-blog-zinnia.tex', u'django-blog-zinnia Documentation',
-   u'Fantomas42', 'manual'),
+  ('index', 'django-blog-zinnia.tex', 'django-blog-zinnia Documentation',
+   'Fantomas42', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -254,6 +256,6 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'django-blog-zinnia', u'django-blog-zinnia Documentation',
-     [u'Fantomas42'], 1)
+    ('index', 'django-blog-zinnia', 'django-blog-zinnia Documentation',
+     ['Fantomas42'], 1)
 ]

@@ -24,7 +24,7 @@ Entry
 
 ZINNIA_ENTRY_BASE_MODEL
 -----------------------
-**Default value:** ``''`` (Empty string)
+**Default value:** ``'zinnia.models_bases.entry.AbstractEntry'`` (Empty string)
 
 String defining the base model path for the Entry model. See
 :doc:`/how-to/extending_entry_model` for more informations.
@@ -94,37 +94,55 @@ ZINNIA_MARKDOWN_EXTENSIONS
 --------------------------
 **Default value:** ``''`` (Empty string)
 
-Extensions names to be used for rendering the entries in MarkDown. Example:
-::
+Extensions names coma separated to be used for rendering the entries in
+MarkDown. Example: ::
 
   ZINNIA_MARKDOWN_EXTENSIONS = 'extension1_name,extension2_name...'
 
-.. setting:: ZINNIA_WYSIWYG
+.. setting:: ZINNIA_RESTRUCTUREDTEXT_SETTINGS
 
-ZINNIA_WYSIWYG
---------------
-**Default value:** ::
+ZINNIA_RESTRUCTUREDTEXT_SETTINGS
+--------------------------------
+**Default value:** ``{}`` (Empty dict)
 
-    WYSIWYG_MARKUP_MAPPING = {
-        'textile': 'markitup',
-        'markdown': 'markitup',
-        'restructuredtext': 'markitup',
-        'html': 'tinymce' in settings.INSTALLED_APPS and \
-                    'tinymce' or 'wymeditor'}
+A dictionary containing settings for the RestructuredText markup
+processing. See the Docutils restructuredtext `writer settings docs
+<http://docutils.sourceforge.net/docs/user/config.html#html4css1-writer>`_
+for details.
 
-    WYSIWYG = getattr(settings, 'ZINNIA_WYSIWYG',
-                      WYSIWYG_MARKUP_MAPPING.get(ZINNIA_MARKUP_LANGUAGE))
+.. _settings-preview:
 
-Determining the WYSIWYG editor used for editing an entry.
-So if MarkDown, Textile or reStructuredText are used, the value will be
-``'markitup'``, but if you use HTML, TinyMCE will be used if
-:ref:`django-tinymce is installed<zinnia-tinymce>`, else WYMEditor will be
-used.
+Preview
+=======
 
-This setting can also be used for disabling the WYSIWYG
-functionnality. Example: ::
+.. setting:: ZINNIA_PREVIEW_SPLITTERS
 
-  ZINNIA_WYSIWYG = None
+ZINNIA_PREVIEW_SPLITTERS
+------------------------
+
+**Default value:** ``['<!-- more -->', '<!--more-->'])``
+
+List of split markers used to make a preview of the entry's content if
+present in the HTML. All the content before the marker will be used to
+build the preview of the entry.
+
+.. setting:: ZINNIA_PREVIEW_MAX_WORDS
+
+ZINNIA_PREVIEW_MAX_WORDS
+------------------------
+
+**Default value:** ``55``
+
+Number of words used to build the entry's preview if no split markers are
+found.
+
+ZINNIA_PREVIEW_MORE_STRING
+--------------------------
+
+**Default value:** ``' ...'``
+
+The string to be appended to the content when a truncation for the preview
+is done.
 
 .. _settings-views:
 
@@ -225,8 +243,8 @@ ZINNIA_AUTO_MODERATE_COMMENTS
 -----------------------------
 **Default value:** ``False``
 
-Determine if a new comment should be allowed to show up
-immediately or should be marked non-public and await approval.
+Determine if a new comment should be marked non-public and await approval.
+Leave as ``False`` to allow comments to show up immediately.
 
 .. setting:: ZINNIA_AUTO_CLOSE_COMMENTS_AFTER
 

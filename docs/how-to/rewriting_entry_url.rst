@@ -90,17 +90,18 @@ build the canonical URL of an entry.
 
 To do this override, simply use the method explained in the
 :doc:`/how-to/extending_entry_model` document to create a new class based on
-:class:`EntryAbstractClass` with the new ``get_absolute_url`` method.  ::
+:class:`~zinnia.models_bases.entry.AbstractEntry` with the new
+``get_absolute_url`` method. ::
 
-  class EntryWithNewUrl(EntryAbstractClass):
+  class EntryWithNewUrl(AbstractEntry):
       """Entry with '/blog/<id>/' URL"""
 
       @models.permalink
       def get_absolute_url(self):
-          return ('zinnia_entry_detail', (),
+          return ('zinnia:entry_detail', (),
                   {'pk': self.id})
 
-      class Meta(EntryAbstractClass.Meta):
+      class Meta(AbstractEntry.Meta):
           abstract = True
 
 Due to the intensive use of this method into the templates, make sure that
@@ -122,9 +123,12 @@ for handling our new URL. ::
   from django.views.generic.detail import DetailView
 
   from zinnia.models.entry import Entry
+  from zinnia.views.mixins.entry_preview import EntryPreviewMixin
   from zinnia.views.mixins.entry_protection import EntryProtectionMixin
 
-  class EntryDetail(EntryProtectionMixin, DetailView):
+  class EntryDetail(EntryPreviewMixin,
+                    EntryProtectionMixin,
+                    DetailView):
       queryset = Entry.published.on_site()
       template_name_field = 'template'
 
@@ -151,7 +155,7 @@ entries. Doing a copy of the original module in your own project can save
 you a lot time. ::
 
   ...
-  url(r'^weblog/', include('zinnia_customized.urls')),
+  url(r'^weblog/', include('zinnia_customized.urls', namespace='zinnia')),
   ...
 
 Now in :mod:`zinnia_customized.urls` rewrite the :func:`~django.conf.urls.url`
@@ -164,7 +168,7 @@ the text parameters. ::
 
   url(r'^(?P<pk>\d+)/$',
       EntryDetail.as_view(),
-      name='zinnia_entry_detail')
+      name='entry_detail')
 
 .. warning::
    If you use the pingback XML-RPC service, you will also need change

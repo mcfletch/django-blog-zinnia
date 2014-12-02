@@ -1,10 +1,15 @@
+from south.v2 import DataMigration
+
 from django.db.models import Q
-from django.contrib.comments.models import CommentFlag
+
+from django_comments.models import CommentFlag
 
 from zinnia.flags import PINGBACK
 from zinnia.flags import TRACKBACK
-
-from south.v2 import DataMigration
+from zinnia.migrations import user_name
+from zinnia.migrations import user_table
+from zinnia.migrations import user_orm_label
+from zinnia.migrations import user_model_label
 
 
 class Migration(DataMigration):
@@ -17,7 +22,7 @@ class Migration(DataMigration):
                 content_type=entry_content_type, object_pk=entry.pk,
                 is_public=True, is_removed=False)
             entry.comment_count = discussion_qs.filter(
-                Q(flags=None) | \
+                Q(flags=None) |
                 Q(flags__flag=CommentFlag.MODERATOR_APPROVAL)).count()
             entry.trackback_count = discussion_qs.filter(
                 flags__flag=TRACKBACK).count()
@@ -44,8 +49,8 @@ class Migration(DataMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
-        'auth.user': {
-            'Meta': {'object_name': 'User'},
+        user_model_label: {
+            'Meta': {'object_name': user_name, 'db_table': "'%s'" % user_table},
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
@@ -71,7 +76,7 @@ class Migration(DataMigration):
             'object_pk': ('django.db.models.fields.TextField', [], {}),
             'site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"}),
             'submit_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'comment_comments'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'comment_comments'", 'null': 'True', 'to': "orm['%s']" % user_orm_label}),
             'user_email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'user_name': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
             'user_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'})
@@ -82,7 +87,7 @@ class Migration(DataMigration):
             'flag': ('django.db.models.fields.CharField', [], {'max_length': '30', 'db_index': 'True'}),
             'flag_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'comment_flags'", 'to': "orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'comment_flags'", 'to': "orm['%s']" % user_orm_label})
         },
         'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
@@ -111,7 +116,7 @@ class Migration(DataMigration):
         },
         'zinnia.entry': {
             'Meta': {'ordering': "['-creation_date']", 'object_name': 'Entry'},
-            'authors': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'entries'", 'blank': 'True', 'to': "orm['auth.User']"}),
+            'authors': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'entries'", 'blank': 'True', 'to': "orm['%s']" % user_orm_label}),
             'categories': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'entries'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['zinnia.Category']"}),
             'comment_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'comment_enabled': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),

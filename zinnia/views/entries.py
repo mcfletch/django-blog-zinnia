@@ -3,14 +3,13 @@ from django.views.generic.dates import BaseDateDetailView
 
 from zinnia.models.entry import Entry
 from zinnia.views.mixins.archives import ArchiveMixin
+from zinnia.views.mixins.entry_preview import EntryPreviewMixin
 from zinnia.views.mixins.entry_protection import EntryProtectionMixin
 from zinnia.views.mixins.callable_queryset import CallableQuerysetMixin
 from zinnia.views.mixins.templates import EntryArchiveTemplateResponseMixin
-from zinnia.views.mixins.tz_fixes import EntryDateDetailTZFix
 
 
-class EntryDateDetail(EntryDateDetailTZFix,
-                      ArchiveMixin,
+class EntryDateDetail(ArchiveMixin,
                       EntryArchiveTemplateResponseMixin,
                       CallableQuerysetMixin,
                       BaseDateDetailView):
@@ -23,12 +22,14 @@ class EntryDateDetail(EntryDateDetailTZFix,
     - BaseDateDetailView to retrieve the entry with date and slug
     - CallableQueryMixin to defer the execution of the *queryset*
       property when imported
-    - EntryDateDetailTZFix for handing the time-zones correctly
-      in Django 1.4.
     """
     queryset = Entry.published.on_site
 
 
-class EntryDetail(EntryProtectionMixin, EntryDateDetail):
-    """Detailled view archive view for an Entry
-    with password and login protections"""
+class EntryDetail(EntryPreviewMixin,
+                  EntryProtectionMixin,
+                  EntryDateDetail):
+    """
+    Detailled archive view for an Entry with password
+    and login protections and restricted preview.
+    """

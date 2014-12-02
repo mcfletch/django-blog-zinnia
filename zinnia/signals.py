@@ -4,11 +4,12 @@ from functools import wraps
 
 from django.db.models import F
 from django.dispatch import Signal
-from django.contrib import comments
 from django.db.models.signals import post_save
 from django.db.models.signals import pre_delete
-from django.contrib.comments.signals import comment_was_posted
-from django.contrib.comments.signals import comment_was_flagged
+
+import django_comments as comments
+from django_comments.signals import comment_was_posted
+from django_comments.signals import comment_was_flagged
 
 from zinnia import settings
 from zinnia.models.entry import Entry
@@ -37,7 +38,7 @@ def disable_for_loaddata(signal_handler):
     def wrapper(*args, **kwargs):
         for fr in inspect.stack():
             if inspect.getmodulename(fr[1]) == 'loaddata':
-                return
+                return  # pragma: no cover
         signal_handler(*args, **kwargs)
 
     return wrapper
@@ -86,17 +87,20 @@ def count_discussions_handler(sender, **kwargs):
         entry.comment_count = entry.comments.count()
         entry.pingback_count = entry.pingbacks.count()
         entry.trackback_count = entry.trackbacks.count()
-        entry.save(force_update=True)
+        entry.save(update_fields=[
+            'comment_count', 'pingback_count', 'trackback_count'])
 
 
 def count_comments_handler(sender, **kwargs):
     """
-    Update Entry.comment_count when a comment was posted.
+    Update Entry.comment_count when a public comment was posted.
     """
-    entry = kwargs['comment'].content_object
-    if isinstance(entry, Entry):
-        entry.comment_count = F('comment_count') + 1
-        entry.save(force_update=True)
+    comment = kwargs['comment']
+    if comment.is_public:
+        entry = comment.content_object
+        if isinstance(entry, Entry):
+            entry.comment_count = F('comment_count') + 1
+            entry.save(update_fields=['comment_count'])
 
 
 def count_pingbacks_handler(sender, **kwargs):
@@ -105,7 +109,7 @@ def count_pingbacks_handler(sender, **kwargs):
     """
     entry = kwargs['entry']
     entry.pingback_count = F('pingback_count') + 1
-    entry.save(force_update=True)
+    entry.save(update_fields=['pingback_count'])
 
 
 def count_trackbacks_handler(sender, **kwargs):
@@ -114,7 +118,7 @@ def count_trackbacks_handler(sender, **kwargs):
     """
     entry = kwargs['entry']
     entry.trackback_count = F('trackback_count') + 1
-    entry.save(force_update=True)
+    entry.save(update_fields=['trackback_count'])
 
 
 def connect_entry_signals():

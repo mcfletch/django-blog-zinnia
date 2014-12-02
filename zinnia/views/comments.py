@@ -1,16 +1,19 @@
 """Views for Zinnia comments"""
-from django.contrib import comments
 from django.template.defaultfilters import slugify
 from django.http import HttpResponsePermanentRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.base import View
 from django.views.generic.base import TemplateResponseMixin
 
+import django_comments as comments
+
 
 class CommentSuccess(TemplateResponseMixin, View):
-    """View for handing the publication of a Comment
-    on an Entry. Do a redirection if the comment is visible,
-    else render a confirmation template."""
+    """
+    View for handing the publication of a Comment on an Entry.
+    Do a redirection if the comment is visible,
+    else render a confirmation template.
+    """
     template_name = 'comments/zinnia/entry/posted.html'
 
     def get_context_data(self, **kwargs):
@@ -23,7 +26,7 @@ class CommentSuccess(TemplateResponseMixin, View):
             try:
                 self.comment = comments.get_model().objects.get(
                     pk=request.GET['c'])
-            except ObjectDoesNotExist:
+            except (ObjectDoesNotExist, ValueError):
                 pass
         if self.comment and self.comment.is_public:
             return HttpResponsePermanentRedirect(

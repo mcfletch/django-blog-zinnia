@@ -1,9 +1,9 @@
 {% extends "zinnia/base.html" %}
-{% load i18n zinnia_tags comments %}
+{% load i18n zinnia comments %}
 
-{% block title %}{% trans "Comment preview" %}{% endblock %}
+{% block title %}{% trans "Comment preview" %}{% endblock title %}
 
-{% block body-class %}comment-preview{% endblock %}
+{% block body-class %}comment-preview{% endblock body-class %}
 
 {% block content %}
   {% if form.errors %}
@@ -22,7 +22,7 @@
 	{% else %}
 	{{ comment.name }}
 	{% endif %}
-	{% trans "on" %}
+	{% trans "on" context "on date" %}
         <abbr class="comment-published" title="{{ comment.submit_date|date:"c" }}">
           {{ comment.submit_date|date:"SHORT_DATETIME_FORMAT" }}
         </abbr>
@@ -33,4 +33,4 @@
   </ol>
   {% endif %}
   {% include "comments/zinnia/entry/form.html" %}
-{% endblock %}
+{% endblock content %}
