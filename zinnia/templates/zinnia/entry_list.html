@@ -30,7 +30,7 @@
 {% if category %}
 <h1>{% blocktrans %}Category archives: {{ category }}{% endblocktrans %} </h1>
 {% if category.description %}
-<p>{{ category.description|striptags|safe }} <a href="{% url 'zinnia_category_feed' path=category.tree_path %}">RSS</a></p>
+<p>{{ category.description|striptags|safe }} <a href="{% url 'zinnia:category_feed' path=category.tree_path %}">RSS</a></p>
 {% endif %}
 <p class="feed">
   <a href="{% url 'zinnia:category_feed' category.tree_path %}" title="{% blocktrans with object=category %}RSS feed of {{ object }}{% endblocktrans %}">
