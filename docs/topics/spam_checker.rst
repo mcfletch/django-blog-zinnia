@@ -60,7 +60,7 @@ possible, you only needs to follows 4 rules.
    related to the text and ``request`` the current request.
 
 #. The **backend** function should returns ``True`` if ``content`` is spam
-   and ``False`` otherwhise.
+   and ``False`` otherwise.
 
 #. If the **backend** requires initial configuration you must raise an
    :exc:`~django.core.exceptions.ImproperlyConfigured` exception if
