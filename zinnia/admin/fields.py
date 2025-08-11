@@ -45,4 +45,4 @@ class MPTTModelMultipleChoiceField(forms.ModelMultipleChoiceField):
         """
         return MPTTModelChoiceIterator(self)
 
-    choices = property(_get_choices)
+    choices = property(_get_choices, forms.ModelMultipleChoiceField.choices.fset)
