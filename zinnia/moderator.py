@@ -1,4 +1,5 @@
 """Moderator of Zinnia comments"""
+
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.mail import EmailMessage
@@ -24,10 +25,11 @@ class EntryCommentModerator(CommentModerator):
     """
     Moderate the comments on entries.
     """
+
     email_reply = MAIL_COMMENT_REPLY
     email_authors = MAIL_COMMENT_AUTHORS
-    enable_field = 'comment_enabled'
-    auto_close_field = 'start_publication'
+    enable_field = "comment_enabled"
+    auto_close_field = "start_publication"
     close_after = AUTO_CLOSE_COMMENTS_AFTER
     spam_checker_backends = SPAM_CHECKER_BACKENDS
     auto_moderate_comments = AUTO_MODERATE_COMMENTS
@@ -43,8 +45,7 @@ class EntryCommentModerator(CommentModerator):
         if self.auto_moderate_comments:
             return True
 
-        if check_is_spam(comment, entry, request,
-                         self.spam_checker_backends):
+        if check_is_spam(comment, entry, request, self.spam_checker_backends):
             return True
 
         return False
@@ -72,24 +73,32 @@ class EntryCommentModerator(CommentModerator):
         if not self.mail_comment_notification_recipients:
             return
 
-        template = loader.get_template(
-            'comments/zinnia/entry/email/notification.txt')
+        template = loader.get_template("comments/zinnia/entry/email/notification.txt")
         context = {
-            'comment': comment,
-            'entry': entry,
-            'site': site,
-            'protocol': PROTOCOL
+            "comment": comment,
+            "entry": entry,
+            "site": site,
+            "protocol": PROTOCOL,
         }
-        subject = _('[%(site)s] New comment posted on "%(title)s"') % \
-            {'site': site.name, 'title': entry.title}
+        subject = _('[%(site)s] New comment posted on "%(title)s"') % {
+            "site": site.name,
+            "title": entry.title,
+        }
         message = template.render(context)
 
-        send_mail(
-            subject, message,
-            settings.DEFAULT_FROM_EMAIL,
-            self.mail_comment_notification_recipients,
-            fail_silently=not settings.DEBUG
-        )
+        try:
+            # don't fail to save if the email host is offline or not
+            # accepting our connections...
+            if settings.EMAIL_HOST:
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    self.mail_comment_notification_recipients,
+                    fail_silently=not settings.DEBUG,
+                )
+        except Exception as err:
+            pass
 
     def do_email_authors(self, comment, entry, site):
         """
@@ -99,31 +108,32 @@ class EntryCommentModerator(CommentModerator):
         if not self.email_authors:
             return
 
-        exclude_list = self.mail_comment_notification_recipients + ['']
-        recipient_list = (
-            set([author.email for author in entry.authors.all()])
-            - set(exclude_list)
+        exclude_list = self.mail_comment_notification_recipients + [""]
+        recipient_list = set([author.email for author in entry.authors.all()]) - set(
+            exclude_list
         )
         if not recipient_list:
             return
 
-        template = loader.get_template(
-            'comments/zinnia/entry/email/authors.txt')
+        template = loader.get_template("comments/zinnia/entry/email/authors.txt")
         context = {
-            'comment': comment,
-            'entry': entry,
-            'site': site,
-            'protocol': PROTOCOL
+            "comment": comment,
+            "entry": entry,
+            "site": site,
+            "protocol": PROTOCOL,
         }
-        subject = _('[%(site)s] New comment posted on "%(title)s"') % \
-            {'site': site.name, 'title': entry.title}
+        subject = _('[%(site)s] New comment posted on "%(title)s"') % {
+            "site": site.name,
+            "title": entry.title,
+        }
         message = template.render(context)
 
         send_mail(
-            subject, message,
+            subject,
+            message,
             settings.DEFAULT_FROM_EMAIL,
             recipient_list,
-            fail_silently=not settings.DEBUG
+            fail_silently=not settings.DEBUG,
         )
 
     def do_email_reply(self, comment, entry, site):
@@ -139,29 +149,30 @@ class EntryCommentModerator(CommentModerator):
             + [author.email for author in entry.authors.all()]
             + [comment.email]
         )
-        recipient_list = (
-            set([other_comment.email
-                 for other_comment in entry.comments
-                 if other_comment.email])
-            - set(exclude_list)
-        )
+        recipient_list = set(
+            [
+                other_comment.email
+                for other_comment in entry.comments
+                if other_comment.email
+            ]
+        ) - set(exclude_list)
         if not recipient_list:
             return
 
-        template = loader.get_template(
-            'comments/zinnia/entry/email/reply.txt')
+        template = loader.get_template("comments/zinnia/entry/email/reply.txt")
         context = {
-            'comment': comment,
-            'entry': entry,
-            'site': site,
-            'protocol': PROTOCOL
+            "comment": comment,
+            "entry": entry,
+            "site": site,
+            "protocol": PROTOCOL,
         }
-        subject = _('[%(site)s] New comment posted on "%(title)s"') % \
-            {'site': site.name, 'title': entry.title}
+        subject = _('[%(site)s] New comment posted on "%(title)s"') % {
+            "site": site.name,
+            "title": entry.title,
+        }
         message = template.render(context)
 
         mail = EmailMessage(
-            subject, message,
-            settings.DEFAULT_FROM_EMAIL,
-            bcc=recipient_list)
+            subject, message, settings.DEFAULT_FROM_EMAIL, bcc=recipient_list
+        )
         mail.send(fail_silently=not settings.DEBUG)
