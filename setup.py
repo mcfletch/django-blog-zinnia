@@ -33,7 +33,7 @@ setup(
         "beautifulsoup4>=4.3.2",
         "django-contrib-comments>=1.7.2",
         "django-mptt>=0.8.6",
-        "django-tagging @ git+https://github.com/mcfletch/django-tagging.git@develop#egg=django-tagging",
+        # "../django-tagging",
         "django-xmlrpc>=0.1.5",
         "mots-vides>=2015.5.11",
         "pillow>=2.0.0",
